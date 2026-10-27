@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+_test.md
+周报_*.md
+*_开发记录_*.md
+.venv/

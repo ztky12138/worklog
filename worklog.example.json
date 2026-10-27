@@ -1,0 +1,21 @@
+{
+  "title": "工作周报",
+  "person": {
+    "name": "",
+    "role": ""
+  },
+  "repos": [
+    {"path": ".", "name": "主项目"}
+  ],
+  "modules": {
+    "src/": "前端",
+    "server/": "服务端",
+    "docs/": "文档"
+  },
+  "ignore_commits": [
+    "^Merge ",
+    "^自动发布$",
+    "^chore\\(release\\)",
+    "\\[skip ci\\]"
+  ]
+}
