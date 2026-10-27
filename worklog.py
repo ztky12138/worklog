@@ -39,6 +39,12 @@ DEFAULT_IGNORE = [
     r'^自动发布',
     r'^chore\(release\)',
     r'^v?\d+\.\d+\.\d+$',          # 纯版本号
+    r'^pull commit$',
+    r'^pull$',
+    r'^update$',
+    r'^更新$',
+    r'^wip$',
+    r'^\d+$',                      # 纯数字
 ]
 
 CREATE_NO_WINDOW = 0x08000000 if sys.platform == 'win32' else 0
@@ -170,6 +176,16 @@ def is_noise(subject: str, patterns: list[re.Pattern]) -> bool:
     return any(p.search(subject) for p in patterns)
 
 
+def default_repo_name(path: str) -> str:
+    """默认名字用最后两级，避免两个仓库都叫 model / src 而无法区分。"""
+    parts = [p for p in os.path.abspath(path).split(os.sep) if p and not p.endswith(':')]
+    if not parts:
+        return path
+    if len(parts) >= 2:
+        return f'{parts[-2]}/{parts[-1]}'
+    return parts[-1]
+
+
 def module_of(files: list[str], modules: dict[str, str]) -> str:
     """把一次提交归到一个模块：按配置里的目录前缀匹配，没配上就退到顶层目录。
 
@@ -287,11 +303,12 @@ def collect(args, cfg: dict) -> tuple[list[tuple[str, list[dict]]], list[re.Patt
     repos = []
     if args.repo:
         for r in args.repo:
-            repos.append({'path': r, 'name': os.path.basename(os.path.abspath(r))})
+            repos.append({'path': r, 'name': default_repo_name(r)})
     elif cfg.get('repos'):
         repos = cfg['repos']
     else:
-        repos = [{'path': '.', 'name': os.path.basename(os.getcwd())}]
+        cwd = os.getcwd()
+        repos = [{'path': cwd, 'name': default_repo_name(cwd)}]
 
     out = []
     for r in repos:

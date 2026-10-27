@@ -110,6 +110,12 @@ python worklog.py record --repo . --module 用户中心 --since 2026-10-01
 ^自动发布
 ^chore\(release\)
 ^v?\d+\.\d+\.\d+$
+^pull commit$
+^pull$
+^update$
+^更新$
+^wip$
+^\d+$
 ```
 
 都可以在配置里追加。如果你的仓库有别的机器提交（比如 `[skip ci]`、`jenkins`），加一条就行。
